@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    public Rigidbody2D Player;
+    public float jumpStrength = 5f;
     public float moveSpeed = 5f;
+    public float move;
+    public int jumpCount;
+    public bool canJump = true;
+    public int maxJumps = 2;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -14,17 +21,34 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    
         Jump();
-        Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
-        transform.position += movement * Time.deltaTime * moveSpeed;
-    }
 
+
+        move = Input.GetAxis("Horizontal");
+        GetComponent<Rigidbody2D>().velocity = new Vector2(move * moveSpeed, GetComponent<Rigidbody2D>().velocity.y);
+        
+    }
     void Jump()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (jumpCount >= maxJumps)
         {
-            gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 5f), ForceMode2D.Impulse);
+            canJump = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) == true && canJump == true)
+        {
+            Player.velocity = Vector2.up * jumpStrength;
+            jumpCount += 1;
         }
     }
-    
+
+        void OnCollisionEnter2D(Collision2D coll){
+
+        if(coll.gameObject.name == "Floor")
+        {
+            canJump=true;
+            jumpCount = 0;
+        }
+    }
 }

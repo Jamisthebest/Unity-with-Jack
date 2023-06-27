@@ -50,7 +50,9 @@ public class Movement : MonoBehaviour
         }
 
     //If we're not moving horizontally, check for vertical movement. The "else if" stops diagonal movement. Change to "if" to allow diagonal movement.
-    } else if (Input.GetAxisRaw ("Vertical") > 0.5f || Input.GetAxisRaw("Vertical") < -0.5f) 
+    } 
+    
+    else if (Input.GetAxisRaw ("Vertical") > 0.5f || Input.GetAxisRaw("Vertical") < -0.5f) 
     {
         transform.Translate (new Vector3 (0f, Input.GetAxisRaw ("Vertical") * moveSpeed * Time.deltaTime, 0f));
     }
@@ -62,20 +64,21 @@ public class Movement : MonoBehaviour
     //anim.SetFloat ("MoveY", Input.GetAxisRaw ("Vertical"));
 
         
-    }
-    void Jump()
-    {
-        if (jumpCount >= maxJumps)
-        {
-            canJump = false;
-        }
+    
 
-        if (Input.GetKeyDown(KeyCode.Space) == true && canJump == true)
+        void Jump()
         {
-            Player.velocity = Vector2.up * jumpStrength; //The rigidbody's velocity is set as an (upwards direction) * (jump magnitude)
-            jumpCount += 1;
+            if (jumpCount >= maxJumps)
+            {
+                canJump = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space) == true && canJump == true)
+            {
+                Player.velocity = Vector2.up * jumpStrength; //The rigidbody's velocity is set as an (upwards direction) * (jump magnitude)
+                jumpCount += 1;
+            }
         }
-    }
 
         void OnCollisionEnter2D(Collision2D coll){
 
@@ -84,7 +87,7 @@ public class Movement : MonoBehaviour
             canJump=true; 
             jumpCount = 0; 
         }
-    }
+        }
 
     void Flip()
     {
@@ -95,6 +98,7 @@ public class Movement : MonoBehaviour
     Vector2 theScale = transform.localScale;
     theScale.x *= -1;
     transform.localScale = theScale;
+    } 
+    
     }
 }
-

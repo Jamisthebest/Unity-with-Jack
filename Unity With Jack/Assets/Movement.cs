@@ -5,8 +5,8 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     public Rigidbody2D Player;
-    public float jumpStrength = 5f;
-    public float moveSpeed = 5f;
+    public float jumpStrength = 150f;
+    public float moveSpeed = 150f;
     public float move;
     public int jumpCount;
     public bool canJump = true;
@@ -21,8 +21,8 @@ public class Movement : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-    
+    { 
+
         Jump();
 
         // Takes user input (A or D)
@@ -52,22 +52,34 @@ public class Movement : MonoBehaviour
     //If we're not moving horizontally, check for vertical movement. The "else if" stops diagonal movement. Change to "if" to allow diagonal movement.
     } 
     
-    else if (Input.GetAxisRaw ("Vertical") > 0.5f || Input.GetAxisRaw("Vertical") < -0.5f) 
+    if (Input.GetAxisRaw ("Vertical") > 0.5f || Input.GetAxisRaw("Vertical") < -0.5f) 
     {
         transform.Translate (new Vector3 (0f, Input.GetAxisRaw ("Vertical") * moveSpeed * Time.deltaTime, 0f));
     }
 
 
 
-    //Variables for the animator to use as params
-    //anim.SetFloat ("MoveX", Input.GetAxisRaw ("Horizontal"));
-    //anim.SetFloat ("MoveY", Input.GetAxisRaw ("Vertical"));
+        //Variables for the animator to use as params
+        //anim.SetFloat ("MoveX", Input.GetAxisRaw ("Horizontal"));
+        //anim.SetFloat ("MoveY", Input.GetAxisRaw ("Vertical"));
 
-        
-    
+
+        void OnCollisionEnter2D(Collision2D col)
+        {
+
+            if (col.gameObject.name == "Floor") // if there is a collision with the gameObject with name "Floor"
+            {   // resets jumps
+                jumpCount = 0;
+            }
+
+
+
+        }
 
         void Jump()
         {
+
+
             if (jumpCount >= maxJumps)
             {
                 canJump = false;
@@ -78,27 +90,22 @@ public class Movement : MonoBehaviour
                 Player.velocity = Vector2.up * jumpStrength; //The rigidbody's velocity is set as an (upwards direction) * (jump magnitude)
                 jumpCount += 1;
             }
+
+
         }
 
-        void OnCollisionEnter2D(Collision2D coll){
+        
 
-        if(coll.gameObject.name == "Floor") // if there is a collision with the gameObject with name "Floor"
-        {   // resets jumps
-            canJump=true; 
-            jumpCount = 0; 
-        }
-        }
+            void Flip()
+        {
+        // Switch the way the player is labelled as facing
+        facingRight = !facingRight;
 
-    void Flip()
-    {
-    // Switch the way the player is labelled as facing
-    facingRight = !facingRight;
-
-    // Multiply the player's x local scale by -1
-    Vector2 theScale = transform.localScale;
-    theScale.x *= -1;
-    transform.localScale = theScale;
-    } 
+        // Multiply the player's x local scale by -1
+        Vector2 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+        } 
     
     }
 }
